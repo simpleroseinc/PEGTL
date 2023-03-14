@@ -48,8 +48,12 @@ namespace tao::pegtl
       [[noreturn]] static void raise( const ParseInput& in, States&&... /*unused*/ )
       {
 #if defined( __cpp_exceptions )
-         if constexpr( internal::has_error_message< Rule > )
-            +throw parse_error( "parse error matching " + std::string( "Rerun with prior commit -- Simplerose update used to compile with nvcc" ), in );
+         if constexpr( internal::has_error_message< Rule > ) {
+            throw parse_error( Rule::error_message, in );
+         }
+         else {
+            throw parse_error( "parse error matching Rule", in );
+         }
 #else
          static_assert( internal::dependent_false< Rule >, "exception support required for normal< Rule >::raise()" );
          (void)in;

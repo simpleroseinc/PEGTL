@@ -52,7 +52,11 @@ namespace tao::pegtl
             throw parse_error( Rule::error_message, in );
          }
          else {
-            throw parse_error( "parse error matching Rule", in );
+            #ifndef __NVCC__
+               throw parse_error( "parse error matching " + std::string( demangle< Rule >() ), in );
+            #else
+               throw parse_error( "parse error matching Rule", in );
+            #endif
          }
 #else
          static_assert( internal::dependent_false< Rule >, "exception support required for normal< Rule >::raise()" );
